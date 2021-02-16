@@ -1,0 +1,24 @@
+body {
+    text-align: center;
+}
+
+#round-results {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#chosen-hand {
+    display: flex;
+    justify-content: space-around;
+    margin: 3rem 0 3rem 0;
+}
+
+#selection-buttons {
+    display: flex;
+    flex-direction: column; 
+    margin: 0 20% 0 20%;
+}
+
+.selection {
+    margin: 1rem;
+}

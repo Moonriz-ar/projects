@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="./style.css">
+    <script src="https://kit.fontawesome.com/3552e4e004.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <h1>Rock Paper Scissors Game</h1>
+    <p id="round-counter">Round 1</p>
+    <section id="round-results">
+        <p id="Player-counter">Player win: 0</p>
+        <p id="Tie-counter">Ties: 0</p>
+        <p id="Computer-counter">Computer win: 0</p>
+    </section>
+
+
+    <section id="chosen-hand">
+        <div>
+            <i class="fas fa-hand-paper fa-10x"></i>
+            <p>Player</p>
+        </div>
+        <div>
+            <i class="fas fa-hand-paper fa-10x"></i>
+            <p>Computer</p>
+        </div>
+    </section>
+
+    <div id="selection-buttons">
+        <button class="selection"><i class="fas fa-hand-paper fa-5x">Paper</i></button>
+        <button class="selection"><i class="fas fa-hand-rock fa-5x">Rock</i></button>
+        <button class="selection"><i class="fas fa-hand-scissors fa-5x">Scissors</i></button>
+    </div>
+
+    <script>
+
+        // function to make input case insensitive
+        function caseInsensitive(playerSelection) {
+            return playerSelection.toLowerCase();
+        }
+
+        // Computer play, randomly return 'Rock', 'Paper' or 'Scissors'
+        function computerPlay() {
+            let randomNumber = Math.ceil(Math.random() * 3);
+            let computerPlay;
+
+            switch (randomNumber) {
+                case 1:
+                    computerPlay = 'rock';
+                    break;
+                case 2:
+                    computerPlay = 'paper';
+                    break;
+                case 3:
+                    computerPlay = 'scissors';
+                    break;
+            }
+
+            return computerPlay;
+        }
+
+        // Play single round of Rock Paper Scissors
+        function playRound(playerSelection, computerSelection) {
+            playerSelectionLowerCase = caseInsensitive(playerSelection); // make function case insensitive
+
+            if (playerSelectionLowerCase === 'scissors') {
+                if (computerSelection === 'rock') {
+                    console.log("You Lose! Rock beats Scissors");
+                    return 'Computer';
+                } else if (computerSelection === 'paper') {
+                    console.log("You Win! Scissors beats Rock");
+                    return 'Player';
+                } else if (computerSelection === 'scissors') {
+                    console.log("Draw!");
+                    return 'Tie';
+                }
+            } else if (playerSelectionLowerCase === 'rock') {
+                if (computerSelection === 'rock') {
+                    console.log("Draw!");
+                    return 'Tie';
+                } else if (computerSelection === 'paper') {
+                    console.log("You Lose! Paper beats Rock");
+                    return 'Computer';
+                } else if (computerSelection === 'scissors') {
+                    console.log("You Win! Rock beats Scissors");
+                    return 'Player';
+                }
+            } else if (playerSelectionLowerCase === 'paper') {
+                if (computerSelection === 'rock') {
+                    console.log("You Win! Paper beats Rock");
+                    return 'Player';
+                } else if (computerSelection === 'paper') {
+                    console.log("Draw!");
+                    return 'Tie';
+                } else if (computerSelection === 'scissors') {
+                    console.log("You Lose! Scissors beat Paper");
+                    return 'Computer';
+                }
+            }
+        }
+
+        // add event listener to paper, rock, scissor button
+        const selectionButtons = document.querySelectorAll('.selection');
+        let computerPoints = 0;
+        let playerPoints = 0;
+        let ties = 0;
+        let roundCounter = 1;
+
+        selectionButtons.forEach(button => button.addEventListener('click', function (e) {
+            let playerSelection = caseInsensitive(button.textContent);
+            let computerSelection = computerPlay();
+ 
+            if (computerPoints >= 5 || playerPoints >= 5) { // check if game ended, computer or player reach 5 points
+                let selectionButtons = document.querySelector('#selection-buttons');
+                let gameResult = document.createElement('p');
+                
+                if (playerPoints > computerPoints) {
+                    gameResult.textContent = 'You have won!';
+                } else {
+                    gameResult.textContent = 'You have lost!';
+                } 
+
+                selectionButtons.replaceWith(gameResult);
+            } else {
+                let roundResult = playRound(playerSelection, computerSelection);
+                let counter = document.querySelector(`#${roundResult}-counter`);
+
+                changeHands(playerSelection, computerSelection);
+
+                if (roundResult === 'Computer') {
+                    computerPoints += 1;
+                    counter.textContent = `${roundResult} wins: ${computerPoints}`;
+                } else if (roundResult === 'Player') {
+                    playerPoints += 1;
+                    counter.textContent = `${roundResult} wins: ${playerPoints}`;
+                } else {
+                    ties += 1;
+                    counter.textContent = `${roundResult}: ${ties}`;
+                }
+            }
+        }));
+
+        // change the image showing the selection of player and computer in last round
+        function changeHands(playerSelection, computerSelection) {
+            let playerHand = document.querySelector('#chosen-hand').firstElementChild.firstElementChild;
+            let computerHand = document.querySelector('#chosen-hand').lastElementChild.firstElementChild;
+
+            playerHand.className = `fas fa-hand-${playerSelection} fa-10x`;
+            computerHand.className = `fas fa-hand-${computerSelection} fa-10x`;
+        }
+
+        // game() function, play a 5 round game
+
+        // function game() {
+        //     console.log('Let\'s play Rock, Paper, Scissors! The best in 5 rounds wins, write your choice to play each round.')
+        //     let computerPoints = 0;
+        //     let playerPoints = 0;
+
+        //     for (let i=0; i<5; i++) {
+        //         let playerSelection = caseInsensitive(prompt('What is your choice: Rock, Paper or Scissors?'));
+        //         let computerSelection = computerPlay();
+
+        //         while (!(playerSelection === 'rock' || playerSelection === 'paper' || playerSelection === 'scissors')) {
+        //             playerSelection = caseInsensitive(prompt('You have entered an invalid value. Please choose one among: Rock, Paper and Scissors'));
+        //         }
+
+        //         console.log(computerSelection);
+        //         let roundResult = playRound(playerSelection, computerSelection);
+
+        //         if (roundResult === 1) {
+        //             computerPoints += 1;
+        //         } else if (roundResult === 2) {
+        //             playerPoints += 1;
+        //         }
+        //     }
+
+        //     if (playerPoints > computerPoints) {
+        //         console.log("You have won!");
+        //     } else if (computerPoints > playerPoints) {
+        //         console.log("You have lost!");
+        //     } else {
+        //         console.log("Draw!");
+        //     }
+        // }
+
+
+    </script>
+</body>
+
+</html>
