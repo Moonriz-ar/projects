@@ -22,4 +22,10 @@ let createDrawingBoard = function(gridQuantity) {
         }    
 }
 
-
+// function: hover draw effect
+let drawSquares = function() {
+    let squares = document.getElementsByClassName('square');
+    Array.from(squares).forEach(square => square.addEventListener('mouseover', function(event) {
+        event.target.classList.add('black');
+    }));
+};
